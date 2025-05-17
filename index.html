@@ -205,6 +205,7 @@
     <button type="submit">Enviar Solicitud</button>
   </form>
 
+  <!-- Scripts -->
   <script>
     let medCount = 0;
 
@@ -247,6 +248,51 @@
         element.remove();
       }
     }
+
+    document.getElementById('medicalForm').addEventListener('submit', async function (event) {
+      event.preventDefault();
+
+      const formData = new FormData(event.target);
+      const json = {};
+
+      formData.forEach((value, key) => {
+        if (key.includes("medications")) {
+          const match = key.match(/medications\[(\d+)\]\[(\w+)\]/);
+          if (match) {
+            const index = match[1];
+            const field = match[2];
+            json.medications = json.medications || [];
+            json.medications[index] = json.medications[index] || {};
+            json.medications[index][field] = value;
+          }
+        } else {
+          json[key] = value;
+        }
+      });
+
+      json.medications = (json.medications || []).filter(Boolean);
+
+      try {
+        const response = await fetch('/submit-form', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(json)
+        });
+
+        if (response.ok) {
+          alert("Formulario enviado exitosamente");
+          event.target.reset();
+          document.getElementById('medicationsContainer').innerHTML = '';
+          medCount = 0;
+        } else {
+          const err = await response.text();
+          alert("Error al enviar: " + err);
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        alert("Error de red o servidor");
+      }
+    });
   </script>
 </body>
 </html>
