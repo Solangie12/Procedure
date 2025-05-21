@@ -336,6 +336,7 @@ document.getElementById('medicalForm').addEventListener('submit', function(event
   })
   .then(response => {
     if (!response.ok) {
+      console.log('Error en la solicitud: ' + response.statusText);
       throw new Error('Error en la solicitud: ' + response.statusText);
     }
     return response.json();
