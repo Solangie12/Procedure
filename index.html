@@ -330,26 +330,22 @@ document.getElementById('medicalForm').addEventListener('submit', function(event
 
   // Envío al backend
   fetch('https://hl7-fhir-ehr-solangie-9665.onrender.com/clinical-procedure/', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(serviceRequestData)
-  })
-  .then(response => {
-    if (!response.ok) {
-      console.log('Error en la solicitud: ' + response.statusText);
-      throw new Error('Error en la solicitud: ' + response.statusText);
-    }
-    return response.json();
-  })
-  .then(data => {
-    console.log('Success:', data);
-    alert('¡Solicitud creada exitosamente! ID: ' + data._id);
-  })
-  .catch(error => {
-    console.error('Error:', error);
-    alert('Hubo un error al enviar la solicitud: ' + error.message);
-  });
-});
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(serviceRequestData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+        alert('Registro creado exitosamente!');
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        alert('Hubo un error al crear el registro.');
+    });
+    
 
     // document.getElementById('medicalForm').addEventListener('submit', async function (event) {
     //   event.preventDefault();
